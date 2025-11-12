@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ratchanon Rattanasuwan — Frontend</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#0f1720;
+      --muted:#9aa7b2;
+      --accent: linear-gradient(135deg,#6dd3ff 0%, #7b61ff 100%);
+      --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(59,84,255,0.07), transparent),
+                  radial-gradient(1000px 500px at 85% 80%, rgba(0,222,255,0.03), transparent),
+                  var(--bg);
+      color:#e6eef6;
+      overflow:hidden;
+    }
+
+    /* Floating blobs */
+    .blob{
+      position:absolute;
+      width:420px;height:420px;
+      border-radius:50%;
+      filter:blur(60px) saturate(120%);
+      opacity:0.9;
+      mix-blend-mode:screen;
+      pointer-events:none;
+    }
+    .blob.one{background:radial-gradient(circle at 30% 30%, rgba(123,97,255,0.95), rgba(59,84,255,0.6)); left:-120px; top:-80px; animation:floatA 14s ease-in-out infinite;}
+    .blob.two{background:radial-gradient(circle at 70% 60%, rgba(109,211,255,0.9), rgba(16,185,129,0.25)); right:-160px; bottom:-80px; width:520px;height:520px; animation:floatB 18s ease-in-out infinite;}
+    .blob.three{background:linear-gradient(135deg, rgba(255,165,86,0.14), rgba(255,96,96,0.08)); left:40%; top:60%; width:360px;height:360px; animation:floatC 22s ease-in-out infinite;}
+    @keyframes floatA{0%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(28px) rotate(12deg);}100%{transform:translateY(0) rotate(0deg);}}
+    @keyframes floatB{0%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-40px) rotate(-10deg);}100%{transform:translateY(0) rotate(0deg);}}
+    @keyframes floatC{0%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(18px) rotate(6deg);}100%{transform:translateY(0) rotate(0deg);}}
+
+    /* ฟองสบู่ */
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 50%;
+      opacity: 0.6;
+      pointer-events: none;
+      animation: rise 12s linear infinite;
+      filter: blur(1px);
+    }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      80% { opacity: 0.9; }
+      100% { transform: translateY(-120vh) scale(1.4); opacity: 0; }
+    }
+
+    .avatar {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      font-weight: bold;
+      box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+      animation: pulse 3s infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+    } 
+
+    /* Layout */
+    .wrap{
+      position:relative;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:48px 24px;
+      z-index:5;
+    }
+    .card{
+      width:100%;
+      max-width:920px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      padding:40px;
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:28px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px) saturate(120%);
+    }
+
+    .intro h1{font-size:clamp(28px,4vw,40px); margin:0 0 8px 0;}
+    .intro h2{margin:0 0 16px 0; color:var(--muted);}
+    .intro p{color:var(--muted); line-height:1.6; margin:0 0 20px 0}
+
+    /* เปลี่ยนเป็นข้อความธรรมดา */
+    .intro .message{
+      background: var(--glass);
+      padding:10px 16px;
+      border-radius:10px;
+      display:inline-block;
+      font-weight:600;
+      color:#e6eef6;
+      box-shadow:0 6px 18px rgba(16,24,40,0.6);
+    }
+
+    .profile{
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+      border-radius:12px;padding:20px;border:1px solid rgba(255,255,255,0.03);
+      display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center;
+    }
+    .avatar{width:120px;height:120px;border-radius:20px;background:linear-gradient(135deg,#22303a, #162029);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:36px;color:rgba(255,255,255,0.9);}
+    .meta{color:var(--muted);font-size:14px}
+    .card{opacity:0; transform:translateY(10px) scale(.998); animation:enter .7s ease-out .12s forwards}
+    @keyframes enter{to{opacity:1; transform:translateY(0) scale(1)}}
+    @media (max-width:880px){
+      .card{grid-template-columns:1fr; padding:28px}
+      .profile{order:-1}
+    }
+  </style>
+</head>
+<body>
+  <!-- Background blobs -->
+  <div class="blob one" aria-hidden="true"></div>
+  <div class="blob two" aria-hidden="true"></div>
+  <div class="blob three" aria-hidden="true"></div>
+
+  <!-- ฟองสบู่ -->
+  <div id="bubbles"></div>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="intro">
+        <h1>Ratchanon Rattanasuwan</h1>
+        <h2>สนใจด้าน Frontend</h2>
+        <p>สามารถใช้ภาษา HTML, CSS และ JavaScript เพื่อสร้างเว็บไซต์ได้อย่างมีประสิทธิภาพ</p>
+        <div class="message">ยินดีที่ได้รู้จัก</div>
+      </div>
+      <aside class="profile">
+        <div class="avatar">
+        <img src="./images/profile.jpg" />
+      </div>
+        <div style="font-weight:700;">Website</div>
+        <div class="meta">Frontend • HTML • CSS • JavaScript</div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const bubbles = document.getElementById('bubbles');
+    function createBubble() {
+      const b = document.createElement('div');
+      b.classList.add('bubble');
+      const size = Math.random() * 14 + 6;
+      b.style.width = b.style.height = size + 'px';
+      b.style.left = Math.random() * 100 + '%';
+      b.style.animationDuration = (8 + Math.random() * 8) + 's';
+      b.style.animationDelay = Math.random() * 5 + 's';
+      bubbles.appendChild(b);
+      setTimeout(() => b.remove(), 15000);
+    }
+    setInterval(createBubble, 600);
+
+    // Parallax blobs
+    (function(){
+      const blobs = document.querySelectorAll('.blob');
+      const wrap = document.querySelector('.wrap');
+      if (!wrap) return;
+      function onMove(e){
+        const rect = wrap.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        blobs.forEach((b, i)=>{
+          const strength = [18, 36, 10][i] || 16;
+          b.style.transform = `translate3d(${x * strength}px, ${y * strength}px, 0)`;
+        });
+      }
+      if (window.matchMedia('(pointer: fine)').matches){
+        window.addEventListener('mousemove', onMove);
+      }
+    })();
+  </script>
+</body>
+</html>
